@@ -35,7 +35,9 @@ module Ooor
 
     def initialize(config, web_session, id)
       set_config(_config(config))
-      Object.const_set(config[:scope_prefix], Module.new) if config[:scope_prefix]
+      if config[:scope_prefix] && !Object.const_defined?(config[:scope_prefix])
+        Object.const_set(config[:scope_prefix], Module.new)
+      end
       @models = {}
       @local_context = {}
       @web_session = web_session || {}
