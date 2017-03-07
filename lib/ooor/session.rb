@@ -158,7 +158,7 @@ module Ooor
         model_ids = object.object_service(:execute, "ir.model", :search, search_domain, 0, false, false, {}, false)
         models_records = object.object_service(:execute, "ir.model", :read, model_ids, ['model', 'name'])
       else
-        response = object.object_service(:search_read, "ir.model", 'search_read',
+        response = object.object_service(:execute, "ir.model", :search_read,
                 fields: ['model', 'name'],
                 offset: 0,
                 limit: false,
