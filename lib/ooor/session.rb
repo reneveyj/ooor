@@ -76,7 +76,7 @@ module Ooor
 
           user_id = json_response['result'].delete('uid')
           config[:user_id] = user_id
-          web_session.merge!(json_response['result'].delete('user_context'))
+          web_session.merge!(json_response['result'].delete('user_context') { {} })
           config.merge!(json_response['result'])
           Ooor.session_handler.register_session(self)
           user_id
@@ -154,19 +154,12 @@ module Ooor
     end
 
     def read_model_data(search_domain)
-      if config[:force_xml_rpc]
-        model_ids = object.object_service(:execute, "ir.model", :search, search_domain, 0, false, false, {}, false)
-        models_records = object.object_service(:execute, "ir.model", :read, model_ids, ['model', 'name'])
-      else
-        response = object.object_service(:execute, "ir.model", :search_read,
-                fields: ['model', 'name'],
-                offset: 0,
-                limit: false,
-                domain: search_domain,
-                sort: false,
-                context: {})
-        models_records = response["records"]
-      end
+      model_ids = object.object_service(
+        :execute, "ir.model", :search, search_domain, 0, false, false, {}, false
+      )
+      object.object_service(
+        :execute, "ir.model", :read, model_ids, ['model', 'name']
+      )
     end
 
     def set_model_template!(klass, options)
