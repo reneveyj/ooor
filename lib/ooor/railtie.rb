@@ -22,9 +22,9 @@ module Ooor
         end
       end
       if defined?(Warden::Manager)
-        app.middleware.insert_after Warden::Manager, '::Ooor::Rack'
+        app.middleware.insert_after Warden::Manager, ::Ooor::Rack
       else
-        app.middleware.insert_after ActionDispatch::ParamsParser, '::Ooor::Rack'
+        app.middleware.insert_after ActionDispatch::ParamsParser, ::Ooor::Rack
       end
     end
 
