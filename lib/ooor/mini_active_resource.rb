@@ -39,12 +39,12 @@ module Ooor
     end
 
     def id
-      attributes["id"]
+      ooor_attributes["id"]
     end
 
     # Sets the <tt>\id</tt> attribute of the resource.
     def id=(id)
-      attributes["id"] = id.to_i # NOTE added to_i for Ooor (HTML forms can pass it as a string)
+      ooor_attributes["id"] = id.to_i # NOTE added to_i for Ooor (HTML forms can pass it as a string)
     end
 
     # Reloads the record from the database.
