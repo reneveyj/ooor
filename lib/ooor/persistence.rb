@@ -87,7 +87,7 @@ module Ooor
       self.class.reload_fields_definition(false)
       raise ArgumentError, "expected an attributes Hash, got #{attributes.inspect}" unless attributes.is_a?(Hash)
       @associations ||= {}
-      @attributes ||= {}
+      @ooor_attributes ||= {}
       @loaded_associations = {}
       attributes.each do |key, value|
         self.send "#{key}=", value if self.respond_to?("#{key}=")
@@ -98,7 +98,7 @@ module Ooor
     #takes care of reading OpenERP default field values.
     def initialize(attributes = {}, default_get_list = false, persisted = false, has_changed = false, lazy = false)
       self.class.reload_fields_definition(false)
-      @attributes = {}
+      @ooor_attributes = {}
       @ir_model_data_id = attributes.delete(:ir_model_data_id)
       @marked_for_destruction = false
       @persisted = persisted
@@ -110,7 +110,7 @@ module Ooor
       end.tap do
         if id && !has_changed
           @previously_changed = ActiveSupport::HashWithIndifferentAccess.new # see ActiveModel::Dirty reset_changes
-          @changed_attributes = ActiveSupport::HashWithIndifferentAccess.new
+          changes_applied
         end
       end
     end
@@ -338,7 +338,7 @@ module Ooor
         self.class.logger.info result["warning"]["title"]
         self.class.logger.info result["warning"]["message"]
       end
-      attrs = @attributes.merge(field_name => field_value)
+      attrs = @ooor_attributes.merge(field_name => field_value)
       attrs.merge!(result["value"])
       load(attrs)
     end
@@ -346,7 +346,7 @@ module Ooor
     def reload_fields
       record = self.class.find(self.id, context: context)
       load(record.attributes.merge(record.associations))
-      @changed_attributes = ActiveSupport::HashWithIndifferentAccess.new # see ActiveModel::Dirty
+      changes_applied
     end
 
   end

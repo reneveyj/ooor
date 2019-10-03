@@ -18,7 +18,7 @@ module Ooor
       end
     end
 
-    attr_accessor :attributes, :id
+    attr_accessor :ooor_attributes, :id
 
     def to_json(options={})
       super(include_root_in_json ? { :root => self.class.element_name }.merge(options) : options)
